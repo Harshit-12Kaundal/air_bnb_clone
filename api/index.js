@@ -1,9 +1,13 @@
 const express= require('express');
 const app= express();
 const cors = require('cors');
+const bcrypt =require('bcrypt');
 const mongoose =require('mongoose');
 const User = require('./models/User.js');
 require('dotenv').config()
+
+
+const bcryptSalt=bcrypt.genSaltSync(10);
 
 app.use(express.json());
 
@@ -22,14 +26,14 @@ app.get('/test' , (req,res)=>{
     res.json("ok test");
 });
 
-app.post('/register',(req, res)=>{
+app.post('/register',async(req, res)=>{
     const{name, email,password}=req.body;
-    User.create({
+    const userDoc = await User.create({
         name,
         email,
-        password,
+        password:bcrypt.hashSync(password,bcryptSalt),
     });
-    res.json({name, email,password});
+    res.json(userDoc);
 
 });
 
