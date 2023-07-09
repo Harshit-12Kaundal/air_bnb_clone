@@ -9,12 +9,17 @@ export default function RegisterPage(){
 
     async function registerUser(ev){
         ev.preventDefault();
-        await axios.post('/register',{
-            name,
-            email,
-            password,
-        });
-        alert('Registration Sucessful .Now you cam login');
+        try{
+            await axios.post('/register',{
+                name,
+                email,
+                password,
+            });
+            alert('Registration Sucessful .Now you cam login');
+        }catch(e){
+            alert('Registration failed .Please try again later')
+        }
+
     }
 
     return(
