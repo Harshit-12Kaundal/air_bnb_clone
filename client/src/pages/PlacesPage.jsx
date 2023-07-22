@@ -92,9 +92,28 @@ export default function PlacesPage(){
                                 <span>Private Enterence</span>
                             </label>
                         </div>
-
                         <h2 className="text-2xl mt-4"> Extra Info</h2>
                         <p className="text-gray-500 text-sm">house rules ,etc</p>
+                        <textarea/>
+                        <h2 className="text-2xl mt-4">Check in&out times, max guests</h2>
+                        <p className="text-gray-500 text-sm">add check in and out times, remember some time window for cleaning the room between guests</p>
+                        <div className="grid gap-2 sm:grid-cols-3">
+                            <div className='mt-2 -mb-1'>
+                                <h3>Cehck in time</h3>
+                                <input type="text" placeholder="16:00"/>
+                            </div>
+                            <div className='mt-2 -mb-1'>
+                                <h3>Check out time</h3>
+                                <input type="text" />
+                            </div>
+                            <div className='mt-2 -mb-1'>
+                                <h3>Max number of guests</h3>
+                                <input type="text" />
+                            </div>
+                        </div>
+                        <div>
+                            <button className="primary my-4">Save</button>
+                        </div>
                     </form>
                 </div>
             )}
