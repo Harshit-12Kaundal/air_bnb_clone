@@ -7,7 +7,6 @@ import Layout from './Layout'
 import axios from 'axios'
 import { UserContextProvider } from './UserContext'
 import AccountPage from './pages/AccountPage'
-import PlacesPage from './pages/PlacesPage'
 
 axios.defaults.baseURL = 'http://127.0.0.1:4000';
 axios.defaults.withCredentials=true;
