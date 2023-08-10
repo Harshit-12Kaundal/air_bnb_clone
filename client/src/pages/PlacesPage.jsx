@@ -47,17 +47,17 @@ export default function PlacesPage(){
     }
 
     function uploadPhoto(ev){
-        const files=ev.target.files;
-        const data=new FormData();
+        const files = ev.target.files;
+        const data = new FormData();
         for(let i=0; i < files.length; i++) {
-            data.append('photos',files[i]);
+            data.append('photos', files[i]);
         }
-        axios.post('/upload',data, { 
+        axios.post('/upload', data, { 
             headers:{'context-type':'multipart/form-data'}
-        }).then(response=>{
-            const {data:filename}=response;
+        }).then(response =>{
+            const {data:filenames}=response;
             setAddedPhotos(prev => {
-                return [...prev, filename];
+                return [...prev, ...filenames];
             });
         })
     }
