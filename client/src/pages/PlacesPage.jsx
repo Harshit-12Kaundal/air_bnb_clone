@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import Perks from "../Perks";
-import axios from 'axios';
+import PhotoUploader from "../PhotosUploader";
 
 export default function PlacesPage(){  
     const {action}=useParams();
     const [title,setTitle]=useState('');
     const [address,setAddress]=useState('');
     const [addedPhotos,setAddedPhotos]=useState([]);
-    const [photoLink,setPhotoLink]=useState('');
     const [description,setDescription]=useState('');
     const [perks,setPerks]=useState('');
     const [extraInfo,setExtraInfo]=useState('');
@@ -37,14 +36,6 @@ export default function PlacesPage(){
         );
     }
 
-    async function addPhotoByLink(ev){
-        ev.preventDefault();
-        const {data:filename}= await axios.post('/upload-by-link' ,{link: photoLink})
-        setAddedPhotos(prev => {
-            return [...prev, filename];
-        });
-        setPhotoLink('');
-    }
     return(
         <div>
             {action !=='new'  &&(
@@ -66,26 +57,7 @@ export default function PlacesPage(){
                         {preInput('Address','Address to this place')}
                         <input type="text" value={address} onChange={ev=>setAddress(ev.target.value)} placeholder="address"/>
                         {preInput('Photos','more=better')}
-                        <div className="flex gap-2">
-                            <input value={photoLink} 
-                            onChange={ev=>setPhotoLink(ev.target.value)} 
-                            type="text" placeholder="{'Add using a link ....jpg}"/>
-                            <button onClick={addPhotoByLink} className="bg-gray-200 px-4 rounded-2xl">Add&nbsp;photo</button>
-                        </div>
-            
-                        <div className="mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                            {addedPhotos.length >0 && addedPhotos.map(link=>(
-                                <div>
-                                    {link}
-                                </div>  
-                            ))}
-                            <button className=" flex gap-1 justify-center border bg-transparent rounded-2xl p-8 text-2xl text-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                                </svg>
-                                Upload
-                            </button>
-                        </div>
+                        <PhotoUploader addedPhotos={addedPhotos} onChange={setAddedPhotos}/>
                         {preInput('Description','description of the place')}
                         <textarea value={description} onChange={ev=>setDescription(ev.target.value)}/>
                         {preInput('Perks','Select all perks of your place')}
