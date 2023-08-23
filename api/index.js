@@ -50,7 +50,7 @@ app.post('/register',async(req, res)=>{
 
 });
 
-app.post('/login',async(req,res)=>{
+app.post('/login',async (req,res)=>{
     const {email,password}=req.body;
     const userDoc= await User.findOne({email});
     if(userDoc){
@@ -126,11 +126,23 @@ app.post('/places',(req,res)=>{
         if(err) throw err;
         const placeDoc = await Place.create({
             owner:userData._id,
-            title,address,addedPhotos,description,
+            title,address,photos:addedPhotos,description,
             Perks,extraInfo,checkIn,checkOut,maxGuests
         });
         res.json(placeDoc);
     });
 });
 
+app.get('/places', (req,res)=>{
+    const {token}=req.cookies;
+    jwt.verify(token, jwtSecret, {} , async (err,userData)=>{
+        const {_id}=userData;
+        res.json(await Place.find({owner:_id}));
+    });
+});
+
+app.get('/places/:id' ,async (req,res)=>{
+    const {id}=req.params;
+    res.json(await Place.findById(id));
+});
 app.listen(4000);
