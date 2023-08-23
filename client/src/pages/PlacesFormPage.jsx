@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Perks from "../Perks";
 import PhotoUploader from "../PhotosUploader";
 import axios from "axios";
+import AccountNav from "../AccountNav";
+import { Navigate, useParams } from "react-router-dom";
 
 export default function PlacesFromPage(){
+    const {id} = useParams();
+    console.log({id});
     const [title,setTitle]=useState('');
     const [address,setAddress]=useState('');
     const [addedPhotos,setAddedPhotos]=useState([]);
@@ -13,6 +17,7 @@ export default function PlacesFromPage(){
     const [checkIn,setCheckIn]=useState('');
     const [checkOut,setCheckOut]=useState('');
     const [maxGuests,setMaxGuests]=useState('1');
+    const [redirect,setRedirect]=useState(false);
 
     function inputHeader(text){
         return (
@@ -20,6 +25,23 @@ export default function PlacesFromPage(){
         );
     }
 
+    useEffect(()=>{
+        if(!id){
+            return;
+        }
+        axios.get('/places/'+id).then(response=>{
+            const {data} = response;
+            setTitle(data.title);
+            setAddress(data.address);
+            setAddedPhotos(data.photos)
+            setDescription(data.description)
+            setPerks(data.perks);
+            setExtraInfo(data.extraInfo);
+            setCheckIn(data.checkIn);
+            setCheckOut(data.checkout);
+            setMaxGuests(data.maxGuests);
+        });
+    },[id]);
     function inputDescription(text){
         return (
             <p className="text-gray-500 text-sm">{text}</p>
@@ -42,12 +64,16 @@ export default function PlacesFromPage(){
             description, perks, extraInfo
            ,checkIn ,checkOut, maxGuests
         });
+        setRedirect(true);
     }
 
-
+    if(redirect){
+        return <Navigate to={'/account/places'}/>
+    }
 
     return(
         <div>
+            <AccountNav/>
             <form onSubmit={addNewPlace}>
                 {preInput('Title','title for your place,should be short and catchy as in advertisement')}
                 <input type="text" value={title} onChange={ev=>setTitle(ev.target.value)} placeholder="title, for my lovely apartent"/>

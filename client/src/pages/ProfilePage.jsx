@@ -6,7 +6,7 @@ import PlacesPage from "./PlacesPage";
 import AccountNav from "../AccountNav";
 
 
-export default function AccountPage(){
+export default function ProfilePage(){
     const [redirect,setRedirect]=useState(null);
     const {ready,user,setUser}=useContext(UserContext);
     let {subpage} = useParams();
@@ -44,7 +44,7 @@ export default function AccountPage(){
                     <button onClick={logout} className="primary max-w-sm mt-2">Logout</button>
                 </div>
             )} 
-            {subpage=='places' && (
+            {subpage ==='places' && (
                 <div>
                     <PlacesPage/>
                 </div>
