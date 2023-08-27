@@ -7,7 +7,6 @@ import { Navigate, useParams } from "react-router-dom";
 
 export default function PlacesFromPage(){
     const {id} = useParams();
-    console.log({id});
     const [title,setTitle]=useState('');
     const [address,setAddress]=useState('');
     const [addedPhotos,setAddedPhotos]=useState([]);
@@ -17,6 +16,7 @@ export default function PlacesFromPage(){
     const [checkIn,setCheckIn]=useState('');
     const [checkOut,setCheckOut]=useState('');
     const [maxGuests,setMaxGuests]=useState('1');
+    const [price,setPrice]=useState(100);
     const [redirect,setRedirect]=useState(false);
 
     function inputHeader(text){
@@ -57,24 +57,35 @@ export default function PlacesFromPage(){
         );
     }
 
-    async function addNewPlace(ev){
+    function savePlace(ev){
         ev.preventDefault();
-        await axios.post('/places',{
+        const placeData = {
             title, address, addedPhotos,
             description, perks, extraInfo
-           ,checkIn ,checkOut, maxGuests
-        });
-        setRedirect(true);
+           ,checkIn ,checkOut, maxGuests,price
+        };
+        if (id) {
+            //update
+             axios.put('/places', {
+                id, ...placeData
+            });
+            setRedirect(true);
+        }
+        else {
+            //new place
+            axios.post('/places' ,placeData)
+            setRedirect(true);
+        }
     }
 
-    if(redirect){
-        return <Navigate to={'/account/places'}/>
+    if (redirect){
+        return <Navigate to={'/account/places' } />
     }
 
     return(
         <div>
             <AccountNav/>
-            <form onSubmit={addNewPlace}>
+            <form onSubmit={savePlace}>
                 {preInput('Title','title for your place,should be short and catchy as in advertisement')}
                 <input type="text" value={title} onChange={ev=>setTitle(ev.target.value)} placeholder="title, for my lovely apartent"/>
                 {preInput('Address','Address to this place')}
@@ -90,26 +101,32 @@ export default function PlacesFromPage(){
                 {preInput('Extra Info', 'house rules ,etc')}
                 <textarea value={extraInfo} onChange={ev=>setExtraInfo(ev.target.value)}/>
                 {preInput('Check in&out times, max number of guests','Add check in and out times, remember some time window for cleaning the room between guests')}
-                <div className="grid gap-2 sm:grid-cols-3">
-                    <div className='mt-2 -mb-1'>
-                        <h3>Check in time</h3>
+                <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-4">
+                    <div>
+                        <h3 className='mt-2 -mb-1'>Check in time</h3>
                         <input type="text" 
                         value={checkIn} 
                         onChange={ev=>setCheckIn(ev.target.value)} 
                         placeholder="14"/>
                     </div>
-                    <div className='mt-2 -mb-1'>
-                        <h3>Check out time</h3>
+                    <div>
+                        <h3 className='mt-2 -mb-1'>Check out time</h3>
                         <input type="text" 
                         value={checkOut}
                         onChange={ev=>setCheckOut(ev.target.value)}
                         placeholder="11"/>
                     </div>
-                    <div className='mt-2 -mb-1'>
-                        <h3>Max number of guests</h3>
+                    <div>
+                        <h3 className='mt-2 -mb-1'>Max number of guests</h3>
                         <input type="number" 
                         value={maxGuests}
                         onChange={ev=>setMaxGuests(ev.target.value)}/>
+                    </div>
+                    <div>
+                        <h3 className='mt-2 -mb-1'>Price per night</h3>
+                        <input type="number" 
+                        value={price}
+                        onChange={ev=>setPrice(ev.target.value)}/>
                     </div>
                 </div>
                 <div>
