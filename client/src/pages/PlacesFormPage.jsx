@@ -11,11 +11,11 @@ export default function PlacesFromPage(){
     const [address,setAddress]=useState('');
     const [addedPhotos,setAddedPhotos]=useState([]);
     const [description,setDescription]=useState('');
-    const [perks,setPerks]=useState('');
+    const [perks,setPerks]=useState([]);
     const [extraInfo,setExtraInfo]=useState('');
     const [checkIn,setCheckIn]=useState('');
     const [checkOut,setCheckOut]=useState('');
-    const [maxGuests,setMaxGuests]=useState('1');
+    const [maxGuests,setMaxGuests]=useState(1);
     const [price,setPrice]=useState(100);
     const [redirect,setRedirect]=useState(false);
 
@@ -101,7 +101,7 @@ export default function PlacesFromPage(){
                 {preInput('Extra Info', 'house rules ,etc')}
                 <textarea value={extraInfo} onChange={ev=>setExtraInfo(ev.target.value)}/>
                 {preInput('Check in&out times, max number of guests','Add check in and out times, remember some time window for cleaning the room between guests')}
-                <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-4">
+                <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
                     <div>
                         <h3 className='mt-2 -mb-1'>Check in time</h3>
                         <input type="text" 
