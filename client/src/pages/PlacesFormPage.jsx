@@ -6,7 +6,7 @@ import AccountNav from "../AccountNav";
 import { Navigate, useParams } from "react-router-dom";
 
 export default function PlacesFromPage(){
-    const {id} = useParams();
+    const {_id} = useParams();
     const [title,setTitle]=useState('');
     const [address,setAddress]=useState('');
     const [addedPhotos,setAddedPhotos]=useState([]);
@@ -24,24 +24,24 @@ export default function PlacesFromPage(){
             <h2 className="text-2xl mt-4">{text}</h2>
         );
     }
-
-    useEffect(()=>{
-        if(!id){
+    useEffect(() => {
+        if (!_id) {
             return;
         }
-        axios.get('/places/'+id).then(response=>{
+        axios.get('/places/'+_id).then(response => { 
             const {data} = response;
             setTitle(data.title);
             setAddress(data.address);
-            setAddedPhotos(data.photos)
-            setDescription(data.description)
+            setAddedPhotos(data.photos);
+            setDescription(data.description);
             setPerks(data.perks);
             setExtraInfo(data.extraInfo);
             setCheckIn(data.checkIn);
             setCheckOut(data.checkout);
             setMaxGuests(data.maxGuests);
         });
-    },[id]);
+    }, [_id]);
+
     function inputDescription(text){
         return (
             <p className="text-gray-500 text-sm">{text}</p>
@@ -64,10 +64,10 @@ export default function PlacesFromPage(){
             description, perks, extraInfo
            ,checkIn ,checkOut, maxGuests,price
         };
-        if (id) {
+        if (_id) {
             //update
              axios.put('/places', {
-                id, ...placeData
+                _id, ...placeData
             });
             setRedirect(true);
         }
@@ -91,7 +91,7 @@ export default function PlacesFromPage(){
                 {preInput('Address','Address to this place')}
                 <input type="text" value={address} onChange={ev=>setAddress(ev.target.value)} placeholder="address"/>
                 {preInput('Photos','more=better')}
-                <PhotoUploader addedPhotos={addedPhotos} onChange={setAddedPhotos}/>
+                <PhotoUploader addedPhotos={addedPhotos} onChange={setAddedPhotos} />
                 {preInput('Description','description of the place')}
                 <textarea value={description} onChange={ev=>setDescription(ev.target.value)}/>
                 {preInput('Perks','Select all perks of your place')}

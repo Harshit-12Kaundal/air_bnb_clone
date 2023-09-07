@@ -58,7 +58,7 @@ app.post('/login',async (req,res)=>{
         if(passOk){
             jwt.sign({
                 email:userDoc.email,
-                _id:userDoc._id
+                id:userDoc.id
                 }, jwtSecret,{},(err,token)=>{
                 if(err) throw err;
                 res.cookie('token',token).json(userDoc);
@@ -78,8 +78,8 @@ app.get('/profile',(req,res)=>{
     if(token){
         jwt.verify(token, jwtSecret,{}, async (err, userData)=>{
         if(err) throw err;
-        const {name,email,_id}=await User.findById(userData._id);
-        res.json({name,email,_id});
+        const {name,email,id}=await User.findById(userData.id);
+        res.json({name,email,id});
     });
     }else{
         res.json(null);
@@ -120,14 +120,14 @@ app.post('/places',(req,res)=>{
     const {token}=req.cookies;
     const {
         title,address,addedPhotos,description,price,
-        Perks,extraInfo,checkIn,checkOut,maxGuests
+        perks,extraInfo,checkIn,checkOut,maxGuests
         }=req.body;
     jwt.verify(token, jwtSecret,{}, async (err, userData)=>{
         if(err) throw err;
         const placeDoc = await Place.create({
             owner:userData.id,price,
             title,address,photos:addedPhotos,description,
-            Perks,extraInfo,checkIn,checkOut,maxGuests
+            perks,extraInfo,checkIn,checkOut,maxGuests
         });
         res.json(placeDoc);
     });
@@ -136,21 +136,21 @@ app.post('/places',(req,res)=>{
 app.get('/user-places', (req,res)=>{
     const {token}=req.cookies;
     jwt.verify(token, jwtSecret, {} , async (err,userData)=>{
-        const {_id}=userData;
-        res.json(await Place.find({owner:_id}));
+        const {id}=userData;
+        res.json(await Place.find({owner:id}));
     });
 });
 
-app.get('/places/:id' ,async (req,res)=>{
-    const {id}=req.params;
-    res.json(await Place.findById(id));
+app.get('/places/:_id' ,async (req,res)=>{
+    const {_id}=req.params;
+    res.json(await Place.findById(_id));
 });
 
 app.put('/places', async (req,res) => {
     const {token}=req.cookies;
     const {
         id,title,address,addedPhotos,description,
-        Perks,extraInfo,checkIn,checkOut,maxGuests,price,
+        perks,extraInfo,checkIn,checkOut,maxGuests,price,
         } = req.body;
         jwt.verify(token, jwtSecret, {} , async (err,userData) => {
             if(err) throw err;
@@ -159,7 +159,7 @@ app.put('/places', async (req,res) => {
                 console.log({price});
                 placeDoc.set({
                 title,address,photos:addedPhotos,description,
-                Perks,extraInfo,checkIn,checkOut,maxGuests,price
+                perks,extraInfo,checkIn,checkOut,maxGuests,price
                 });
                 await placeDoc.save();
                 res.json('ok')

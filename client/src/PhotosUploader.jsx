@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
+// eslint-disable-next-line react/prop-types
 export default function PhotoUploader({addedPhotos,onChange}){
     const [photoLink,setPhotoLink]=useState('');
     
@@ -31,11 +32,13 @@ export default function PhotoUploader({addedPhotos,onChange}){
 
     function removePhoto(ev,filename){
         ev.preventDefault();
+        // eslint-disable-next-line react/prop-types
         onChange([...addedPhotos.filter(photo=>photo!==filename)])
     }
     
     function selectAsMainPhoto(ev,filename){
         ev.preventDefault();
+        // eslint-disable-next-line react/prop-types
         onChange([filename, ...addedPhotos.filter(photo => photo!==filename)])
     }
 
